@@ -29,11 +29,10 @@ init([]) ->
     SupFlags = #{strategy => one_for_one,
                  intensity => 10,
                  period => 10000},
-    ChildSpecs = [#{
-      id => andy_server,
-      start => {andy_server, start_link, []}
-    }
-    % ,#{id => andy_playground, start => {andy_playground, start, [inital_state]}, restart => transient}
+    ChildSpecs = [
+        andy_connection:child_spec()
+        %  #{id => andy_server, start => {andy_server, start_link, []}}
+        %, #{id => andy_playground, start => {andy_playground, start, [inital_state]}, restart => transient}
     ],
 
     {ok, {SupFlags, ChildSpecs}}.
