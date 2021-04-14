@@ -77,10 +77,15 @@ handle_continue({recv, Socket}, State) ->
 
 process_command(<<"PUT ", Payload/binary>>, Socket, State) ->
     ?LOG_DEBUG("put command received with payload [~p]", [Payload]),
-    {noreply, State, #continue{payload = {recv, Socket}}};
+    Chomped = string:chomp(Payload),
+    [Key, Value] = string:split(Chomped, <<" ">>),
+    Data = maps:put(Key, Value, State#state.data),
+    {noreply, State#state{data = Data}, #continue{payload = {recv, Socket}}};
 process_command(<<"GET ", Payload/binary>>, Socket, State) ->
     ?LOG_DEBUG("get command received with payload [~p]", [Payload]),
-    ok = gen_tcp:send(Socket, <<"pizda\n">>),
+    Key = string:chomp(Payload),
+    Value = maps:get(Key, State#state.data, <<"ERROR:unknown_key">>),
+    ok = gen_tcp:send(Socket, <<Value/binary, "\n">>),
     {noreply, State, #continue{payload = {recv, Socket}}};
 process_command(Command, Socket, State) ->
     ?LOG_ERROR("Unknown commant [~p]", [Command]),
