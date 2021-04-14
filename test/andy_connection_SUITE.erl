@@ -1,4 +1,5 @@
 -module(andy_connection_SUITE).
+-include("andy_connection.hrl").
 -include_lib("common_test/include/ct.hrl").
 -include_lib("eunit/include/eunit.hrl").
 
@@ -26,7 +27,7 @@ put_get_test(Config) ->
     ?assertEqual(<<"123">>, Value, "Should return the value we put").
 
 init_per_testcase(_TestName, Config) ->
-    {ok, Socket} = gen_tcp:connect("localhost", 5678, [binary,{packet, line},{active, false}]),
+    {ok, Socket} = gen_tcp:connect("localhost", ?PORT, ?OPTIONS),
     [{socket, Socket} | Config].
 
 end_per_testcase(_TestName, Config) ->

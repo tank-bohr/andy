@@ -1,4 +1,5 @@
 -module(andy_connection).
+-include("andy_connection.hrl").
 -include_lib("kernel/include/logger.hrl").
 
 -export([
@@ -16,12 +17,6 @@
 ]).
 
 -define(SERVER, ?MODULE).
--define(PORT, 5678).
--define(OPTIONS, [
-    binary,
-    {packet, line},
-    {active, false}
-]).
 
 -record(state, {
     listen,
