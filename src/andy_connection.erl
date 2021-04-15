@@ -19,8 +19,7 @@
 -define(SERVER, ?MODULE).
 
 -record(state, {
-    listen,
-    data = #{}
+    listen
 }).
 
 -record(continue, {

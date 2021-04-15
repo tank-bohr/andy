@@ -63,20 +63,22 @@ handle_continue(recv, #state{socket = Socket} = State) ->
 
 process_command(<<"PUT ", Payload/binary>>, #state{socket = _Socket} = State) ->
     ?LOG_DEBUG("put command received with payload [~p]", [Payload]),
-    % Chomped = string:chomp(Payload),
-    % [Key, Value] = string:split(Chomped, <<" ">>),
-    % Data = maps:put(Key, Value, State#state.data),
+    Chomped = string:chomp(Payload),
+    [Key, Value] = string:split(Chomped, <<" ">>),
+    ok = andy_db:put(Key, Value),
     {noreply, State, #continue{payload = recv}};
-process_command(<<"GET ", Payload/binary>>, #state{socket = _Socket} = State) ->
+process_command(<<"GET ", Payload/binary>>, #state{socket = Socket} = State) ->
     ?LOG_DEBUG("get command received with payload [~p]", [Payload]),
-    % Key = string:chomp(Payload),
-    % Value = maps:get(Key, State#state.data, <<"ERROR:unknown_key">>),
-    % ok = gen_tcp:send(Socket, <<Value/binary, "\n">>),
+    Key = string:chomp(Payload),
+    Response = case andy_db:get(Key) of
+        {ok, Value} ->
+            Value;
+        {error, no_value} ->
+            <<"ERROR: no value">>
+    end,
+    ok = gen_tcp:send(Socket, <<Response/binary, "\n">>),
     {noreply, State, #continue{payload = recv}};
 process_command(Command, #state{socket = Socket} = State) ->
     ?LOG_ERROR("Unknown commant [~p]", [Command]),
     ok = gen_tcp:send(Socket, <<"ERROR\n">>),
     {noreply, State, #continue{payload = recv}}.
-
-
-
