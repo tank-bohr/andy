@@ -1,4 +1,5 @@
 -module(andy_connection).
+-include("andy.hrl").
 -include("andy_connection.hrl").
 -include_lib("kernel/include/logger.hrl").
 
@@ -20,10 +21,6 @@
 
 -record(state, {
     listen
-}).
-
--record(continue, {
-    payload
 }).
 
 child_spec() ->

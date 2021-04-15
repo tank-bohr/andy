@@ -1,5 +1,5 @@
 -module(andy_acceptor).
-% -include("andy_acceptor.hrl").
+-include("andy.hrl").
 -include_lib("kernel/include/logger.hrl").
 
 -export([
@@ -18,10 +18,6 @@
 
 -record(state, {
     socket
-}).
-
--record(continue, {
-    payload
 }).
 
 child_spec() ->
