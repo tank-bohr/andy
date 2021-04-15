@@ -32,7 +32,7 @@ child_spec() ->
     }.
 
 start_link(Socket) ->
-    gen_server:start_link(#{socket => Socket}, []).
+    gen_server:start_link(?MODULE, #{socket => Socket}, []).
 
 %% @private
 init(#{socket := Socket}) ->
