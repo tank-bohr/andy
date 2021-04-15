@@ -1,13 +1,11 @@
-%%%-------------------------------------------------------------------
-%% @doc andy top level supervisor.
-%% @end
-%%%-------------------------------------------------------------------
-
--module(andy_sup).
+-module (andy_acceptor_sup).
 
 -behaviour(supervisor).
 
--export([start_link/0]).
+-export([
+  start_link/0,
+  child_spec/0
+]).
 
 -export([init/1]).
 
@@ -26,16 +24,19 @@ start_link() ->
 %%                  type => worker(),       % optional
 %%                  modules => modules()}   % optional
 init([]) ->
-    SupFlags = #{strategy => one_for_one,
+    SupFlags = #{strategy => simple_one_for_one,
                  intensity => 10,
                  period => 10000},
     ChildSpecs = [
-        andy_acceptor_sup:child_spec(),
-        andy_connection:child_spec()
-        %  #{id => andy_server, start => {andy_server, start_link, []}}
-        %, #{id => andy_playground, start => {andy_playground, start, [inital_state]}, restart => transient}
+        andy_acceptor:child_spec()
     ],
 
     {ok, {SupFlags, ChildSpecs}}.
 
-%% internal functions
+child_spec() ->
+    #{
+        id => ?MODULE,
+        start => {?MODULE, start_link, []},
+        restart => permanent,
+        type => supervisor
+    }.
