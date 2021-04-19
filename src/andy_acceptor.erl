@@ -1,5 +1,6 @@
 -module(andy_acceptor).
 -include("andy.hrl").
+-include("andy_acceptor.hrl").
 -include_lib("kernel/include/logger.hrl").
 
 -export([
@@ -13,7 +14,8 @@
     handle_call/3,
     handle_cast/2,
     handle_info/2,
-    handle_continue/2
+    handle_continue/2,
+    terminate/2
 ]).
 
 -record(state, {
@@ -48,33 +50,43 @@ handle_info(_Info, State) ->
     {noreply, State}.
 
 handle_continue(recv, #state{socket = Socket} = State) ->
-  ?LOG_DEBUG("I'm going to receive some data from socket"),
-  case gen_tcp:recv(Socket, 0) of
-      {ok, Packet} ->
-          process_command(Packet, State);
-      {error, closed} ->
-          ?LOG_ERROR("Socket closed"),
-          {stop, normal, State}
-  end.
+    ?LOG_DEBUG("I'm going to receive some data from socket"),
+    case gen_tcp:recv(Socket, 0) of
+        {ok, Packet} ->
+        process_packet(Packet, State);
+        {error, closed} ->
+        ?LOG_ERROR("Socket closed"),
+        {stop, normal, State}
+    end.
 
-process_command(<<"PUT ", Payload/binary>>, #state{socket = _Socket} = State) ->
-    ?LOG_DEBUG("put command received with payload [~p]", [Payload]),
-    Chomped = string:chomp(Payload),
-    [Key, Value] = string:split(Chomped, <<" ">>),
-    ok = andy_db:put(Key, Value),
-    {noreply, State, #continue{payload = recv}};
-process_command(<<"GET ", Payload/binary>>, #state{socket = Socket} = State) ->
-    ?LOG_DEBUG("get command received with payload [~p]", [Payload]),
-    Key = string:chomp(Payload),
+terminate(_Reason, #state{socket = Socket}) ->
+    gen_tcp:close(Socket).
+
+process_packet(Packet, #state{socket = Socket} = State) ->
+    try redis:decode(Packet) of
+        {ok, [Command | Args]} ->
+            process_command([string:uppercase(Command) | Args], Socket)
+    catch
+        error:Reason ->
+            ?LOG_ERROR("invalid packet caused error: [~p]", [Reason]),
+            ErrorResp = redis:encode({error, <<"ERROR">>}),
+            ok = gen_tcp:send(Socket, ErrorResp)
+    end,
+    {noreply, State, #continue{payload = recv}}.
+
+process_command([<<"COMMAND">>], Socket) ->
+    ok = gen_tcp:send(Socket, redis:encode(?AVAILABLE_COMMANDS));
+process_command([<<"GET">>, Key], Socket) ->
     Response = case andy_db:get(Key) of
         {ok, Value} ->
             Value;
         {error, no_value} ->
-            <<"ERROR: no value">>
+            {error, <<"No value.">>}
     end,
-    ok = gen_tcp:send(Socket, <<Response/binary, "\n">>),
-    {noreply, State, #continue{payload = recv}};
-process_command(Command, #state{socket = Socket} = State) ->
-    ?LOG_ERROR("Unknown commant [~p]", [Command]),
-    ok = gen_tcp:send(Socket, <<"ERROR\n">>),
-    {noreply, State, #continue{payload = recv}}.
+    ok = gen_tcp:send(Socket, redis:encode(Response));
+process_command([<<"SET">>, Key, Value], Socket) ->
+    ok = andy_db:put(Key, Value),
+    ok = gen_tcp:send(Socket, redis:encode({bulk_string, <<"OK">>}));
+process_command(Command, Socket) ->
+    ?LOG_ERROR("Unsupported command received", [Command]),
+    ok = gen_tcp:send(Socket, redis:encode({error, <<"Unsupported command.">>})).

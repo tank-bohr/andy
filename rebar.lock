@@ -1,1 +1,4 @@
-[].
+[{<<"redis">>,
+  {git,"https://github.com/niamtokik/redis",
+       {ref,"2d2790fe6f63cfe269ffa60c0689ada9bc65a116"}},
+  0}].

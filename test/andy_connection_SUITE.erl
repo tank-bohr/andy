@@ -20,10 +20,19 @@ all() ->
 
 put_get_test(Config) ->
     Socket = ?config(socket, Config),
-    ok = gen_tcp:send(Socket, <<"PUT A 123\n">>),
-    ok = gen_tcp:send(Socket, <<"GET A\n">>),
-    {ok, Packet} = gen_tcp:recv(Socket, 0),
-    Value = string:chomp(Packet),
+    ok = gen_tcp:send(Socket, redis:encode([
+        {bulk_string, <<"SET">>},
+        {bulk_string, <<"A">>},
+        {bulk_string, <<"123">>}
+    ])),
+    {ok, SetResp} = gen_tcp:recv(Socket, 0),
+    ?assertMatch({ok, <<"OK">>}, redis:decode(SetResp)),
+    ok = gen_tcp:send(Socket, redis:encode([
+        {bulk_string, <<"GET">>},
+        {bulk_string, <<"A">>}
+    ])),
+    {ok, GetResp} = gen_tcp:recv(Socket, 0),
+    {ok, Value} = redis:decode(GetResp),
     ?assertEqual(<<"123">>, Value, "Should return the value we put").
 
 init_per_testcase(_TestName, Config) ->

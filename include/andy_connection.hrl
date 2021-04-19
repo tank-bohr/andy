@@ -1,6 +1,7 @@
--define(PORT, 5678).
+-define(PORT, 6379).
 -define(OPTIONS, [
     binary,
-    {packet, line},
-    {active, false}
+    {packet, raw},
+    {active, false},
+    {reuseaddr, true}
 ]).
