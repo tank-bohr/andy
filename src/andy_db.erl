@@ -3,7 +3,9 @@
     child_spec/0,
     start_link/0,
     put/2,
-    get/1
+    get/1,
+    dump/0,
+    load/1
 ]).
 
 -behaviour(gen_server).
@@ -45,6 +47,12 @@ put(Key, Value) ->
 get(Key) ->
     gen_server:call(?SERVER, #get{key = Key}).
 
+dump() ->
+  gen_server:call(?SERVER, dump).
+
+load(Data) ->
+  gen_server:call(?SERVER, {load, Data}).
+
 %% @private
 init({}) ->
     {ok, #state{}}.
@@ -60,6 +68,10 @@ handle_call(#get{key = Key}, _From, State) ->
         error ->
             {reply, {error, no_value}, State}
     end;
+handle_call(dump, _From, State) ->
+  {reply, {ok, State#state.data}, State};
+handle_call({load, Data}, _From, State) ->
+  {reply, ok, State#state{data = Data#state.data}};
 handle_call(_Request, _From, State) ->
     {reply, {error, unknown_call}, State}.
 
