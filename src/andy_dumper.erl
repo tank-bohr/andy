@@ -38,7 +38,6 @@ start_link() ->
 
 init({}) ->
     timer:send_after(1000, self(), load),
-    timer:send_after(5000, self(), tick),
     {ok, #state{}}.
 
 handle_call(_Request, _From, State) ->
@@ -50,6 +49,7 @@ handle_cast(_, State) ->
 
 handle_info(load, State) ->
     load_from_file(),
+    timer:send_after(5000, self(), tick),
     {noreply, State};
 handle_info(tick, State) ->
     % ?LOG_DEBUG("Time to dump some data"),
