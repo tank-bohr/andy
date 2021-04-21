@@ -4,7 +4,8 @@
     hello/0,
     hello/1,
     hello_case/1,
-    start/1
+    start/1,
+    send_after2/3
 ]).
 
 hello() ->
@@ -51,3 +52,15 @@ start(InitialState) ->
     Pid = spawn_link(fun() -> pizda(InitialState) end),
     io:format("My name is ~p", [Pid]),
     {ok, Pid}.
+
+send_after2(Timeout, Pid, Msg) ->
+    Ref = make_ref(),
+    spawn(fun() ->
+        receive
+            {cancel, Ref} ->
+                ok
+        after Timeout ->
+            Pid ! Msg
+        end
+    end),
+    Ref.
