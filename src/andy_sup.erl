@@ -32,7 +32,8 @@ init([]) ->
     ChildSpecs = [
         andy_db:child_spec(),
         andy_acceptor_sup:child_spec(),
-        andy_connection:child_spec()
+        andy_connection:child_spec(),
+        andy_dumper:child_spec()
         %, #{id => andy_server, start => {andy_server, start_link, []}}
         %, #{id => andy_playground, start => {andy_playground, start, [inital_state]}, restart => transient}
     ],
