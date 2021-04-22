@@ -35,7 +35,8 @@ start_link() ->
 
 %% @private
 init({}) ->
-    {ok, Listen} = gen_tcp:listen(?PORT, ?OPTIONS),
+    Port = application:get_env(andy, port, ?DEFAULT_PORT),
+    {ok, Listen} = gen_tcp:listen(Port, ?OPTIONS),
     State = #state{listen = Listen},
     {ok, State, #continue{payload = accept}}.
 

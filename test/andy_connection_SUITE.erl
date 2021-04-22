@@ -36,7 +36,7 @@ put_get_test(Config) ->
     ?assertEqual(<<"123">>, Value, "Should return the value we put").
 
 init_per_testcase(_TestName, Config) ->
-    {ok, Socket} = gen_tcp:connect("localhost", ?PORT, ?OPTIONS),
+    {ok, Socket} = gen_tcp:connect("localhost", ?DEFAULT_PORT, ?OPTIONS),
     [{socket, Socket} | Config].
 
 end_per_testcase(_TestName, Config) ->
