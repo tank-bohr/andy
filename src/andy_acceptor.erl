@@ -53,10 +53,10 @@ handle_continue(recv, #state{socket = Socket} = State) ->
     ?LOG_DEBUG("I'm going to receive some data from socket"),
     case gen_tcp:recv(Socket, 0) of
         {ok, Packet} ->
-        process_packet(Packet, State);
+            process_packet(Packet, State);
         {error, closed} ->
-        ?LOG_ERROR("Socket closed"),
-        {stop, normal, State}
+            ?LOG_DEBUG("Socket closed"),
+            {stop, normal, State}
     end.
 
 terminate(_Reason, #state{socket = Socket}) ->
