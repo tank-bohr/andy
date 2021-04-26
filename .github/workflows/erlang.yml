@@ -17,4 +17,4 @@ jobs:
     - name: Compile
       run: rebar3 compile
     - name: Run tests
-      run: rebar3 ct --name=fake_name
+      run: rebar3 ct --sname=testname
