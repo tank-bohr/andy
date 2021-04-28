@@ -6,6 +6,7 @@
 
 -define(SERVER, ?MODULE).
 
+-spec start_link() -> {ok, pid()}.
 start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, {}, []).
 

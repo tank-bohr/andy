@@ -22,6 +22,7 @@
     socket
 }).
 
+-spec child_spec() -> supervisor:child_spec().
 child_spec() ->
     #{
         id => ?MODULE,
@@ -29,6 +30,7 @@ child_spec() ->
         restart => transient
     }.
 
+-spec start_link(gen_tcp:socket()) -> {ok, pid()}.
 start_link(Socket) ->
     gen_server:start_link(?MODULE, #{socket => Socket}, []).
 

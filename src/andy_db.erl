@@ -15,6 +15,7 @@
 -callback put(binary(), binary()) -> ok.
 -callback get(binary()) -> {ok, binary()} | {error, no_value}.
 
+-spec child_spec() -> supervisor:child_spec().
 child_spec() ->
     #{
         id => ?BACKEND,
@@ -22,11 +23,14 @@ child_spec() ->
         restart => permanent
     }.
 
+-spec put(binary(), binary()) -> ok.
 put(Key, Value) ->
     ?BACKEND:put(Key, Value).
 
+-spec get(binary()) -> {ok, binary()} | {error, no_value}.
 get(Key) ->
     ?BACKEND:get(Key).
 
+-spec init_backend() -> ok.
 init_backend() ->
     persistent_term:put(?KEY, application:get_env(andy, db_backend, ?DEFAULT_BACKEND)).

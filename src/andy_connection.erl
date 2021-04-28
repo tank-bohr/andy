@@ -23,6 +23,7 @@
     listen
 }).
 
+-spec child_spec() -> supervisor:child_spec().
 child_spec() ->
     #{
         id => ?MODULE,
@@ -30,6 +31,7 @@ child_spec() ->
         restart => permanent
     }.
 
+-spec start_link() -> {ok, pid()}.
 start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, {}, []).
 

@@ -8,12 +8,15 @@
     send_after2/3
 ]).
 
+-spec hello() -> ok.
 hello() ->
     io:format("Hello world~n").
 
+-spec hello(term()) -> ok.
 hello(Name) ->
     io:format("Hello, ~s~n", [Name]).
 
+-spec hello_case(term()) -> ok.
 hello_case(ok) ->
     io:format("Everything is ok!~n");
 hello_case(Arg) ->
