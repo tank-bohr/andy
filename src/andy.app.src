@@ -5,7 +5,10 @@
   {mod, {andy_app, []}},
   {applications,
    [kernel,
-    stdlib
+    stdlib,
+    sasl,
+    mnesia,
+    redis
    ]},
   {env,[]},
   {modules, []},

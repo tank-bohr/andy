@@ -1,0 +1,8 @@
+[
+    {kernel, [
+        {logger_level, ${LOG_LEVEL}}
+    ]},
+    {andy, [
+        {db_backend, andy_mnesia_backend}
+    ]}
+].
