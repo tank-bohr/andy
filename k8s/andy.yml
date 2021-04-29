@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: andy
+spec:
+  containers:
+  - name: andy
+    image: tankbohr/andy:latest
+    env:
+    - name: "LOG_LEVEL"
+      value: "info"
+    - name: "COOKIE"
+      value: "0ec50c3a-eb8b-4d93-a9c5-5cf267724f6f"
+
+  restartPolicy: OnFailure
