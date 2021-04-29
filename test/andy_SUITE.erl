@@ -19,7 +19,6 @@
     end_per_testcase/2
 ]).
 
--define(APPS, [mnesia, andy]).
 -define(APPLICATION_ENV(Port, Nodes), [
     {kernel, [
         {logger_level, error}
@@ -56,7 +55,7 @@ end_per_suite(_Config) ->
     ok.
 
 init_per_group(local_backend, Config) ->
-    ok = application:start(andy),
+    {ok, _Started} = application:ensure_all_started(andy),
     [{backend, local} | Config];
 init_per_group(mnesia_backend, Config) ->
     MasterNode = node(),
@@ -76,7 +75,7 @@ end_per_group(local_backend, _Config) ->
 end_per_group(mnesia_backend, Config) ->
     Nodes = ?config(nodes, Config),
     SlaveNode = ?config(slave_node, Config),
-    [stop_appliations(N) || N <- Nodes],
+    [stop_applications(N) || N <- Nodes],
     slave:stop(SlaveNode).
 
 init_per_testcase(_TestCase, Config) ->
@@ -121,14 +120,10 @@ put_get_test(Config) ->
 
 start_applications(Node, Env) ->
     ok = rpc:call(Node, application, set_env, [Env]),
-    lists:foreach(fun(App) ->
-        ok = rpc:call(Node, application, start, [App])
-    end, ?APPS).
+    {ok, _Started} = rpc:call(Node, application, ensure_all_started, [andy]).
 
-stop_appliations(Node) ->
-    lists:foreach(fun(App) ->
-        ok = rpc:call(Node, application, stop, [App])
-    end, ?APPS).
+stop_applications(Node) ->
+    ok = rpc:call(Node, application, stop, [andy]).
 
 setup_slave(Node) ->
     Path = lists:filter(fun is_directory/1, code:get_path()),
