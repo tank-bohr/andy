@@ -2,13 +2,14 @@
  [{description, "An OTP application"},
   {vsn, "0.1.0"},
   {registered, []},
-  {mod, {andy_app, []}},
+  {mod, {andy_app, [andy_handler]}},
   {applications,
    [kernel,
     stdlib,
     sasl,
     mnesia,
-    redis
+    redis,
+    cowboy
    ]},
   {env,[]},
   {modules, []},

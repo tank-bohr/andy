@@ -19,22 +19,23 @@
     end_per_testcase/2
 ]).
 
--define(APPLICATION_ENV(Port, Nodes), [
+-define(APPLICATION_ENV(Port, Nodes, HttpMode), [
     {kernel, [
         {logger_level, error}
     ]},
     {andy, [
         {port, Port},
+        {http_mode, HttpMode},
         {db_backend, andy_mnesia_backend},
         {db_nodes, Nodes}
     ]}
 ]).
 
 -define(MASTER_PORT, 6379).
--define(MASTER_ENV(Nodes), ?APPLICATION_ENV(?MASTER_PORT, Nodes)).
+-define(MASTER_ENV(Nodes), ?APPLICATION_ENV(?MASTER_PORT, Nodes, master)).
 
 -define(SLAVE_PORT, 6378).
--define(SLAVE_ENV(Nodes), ?APPLICATION_ENV(?SLAVE_PORT, Nodes)).
+-define(SLAVE_ENV(Nodes), ?APPLICATION_ENV(?SLAVE_PORT, Nodes, slave)).
 
 all() ->
     [
