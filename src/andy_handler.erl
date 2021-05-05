@@ -11,7 +11,7 @@ init(Req=#{method := <<"GET">>, path := <<"/">>}, State) ->
             "Hello from Andy!\n",
             "Usage\n",
             "- GET /:key to fetch a value\n",
-            "- POST /:key with a value in the body to record a pair"
+            "- POST /:key with a value in the body to record a pair\n"
         >>,
         Req),
     {ok, Resp, State};
