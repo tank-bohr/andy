@@ -24,7 +24,8 @@ init([]) ->
     ChildSpecs = [
         andy_db:child_spec(),
         andy_acceptor_sup:child_spec(),
-        andy_connection:child_spec()
+        andy_connection:child_spec(),
+        andy_cowboy_sup:child_spec()
     ],
 
     {ok, {SupFlags, ChildSpecs}}.
