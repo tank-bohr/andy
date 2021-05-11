@@ -1,12 +1,16 @@
 .PHONY: pods apps shell kb-app-show kb-app-shell remote-console build-and-push
 
 NAMESPACE ?= default
+PORT := 6379
 
 pods:
-	@kubectl get pods -n $(NAMESPACE)
+	@kubectl get pods -n $(NAMESPACE) -o wide
 
 apps:
 	@kubectl get pod -n $(NAMESPACE) -l "app=andy" -o name
+
+apply:
+	@kubectl apply -f k8s/andy.yml
 
 shell: kb-app-shell
 
@@ -30,6 +34,9 @@ kb-app-shell:
 
 kb-app-remote_console:
 	@kubectl exec -it $(APP) -n $(NAMESPACE) -- ./bin/app remote_console
+
+kb-app-port-forward:
+	@kubectl port-forward $(APP) $(PORT)
 
 docker-build:
 	@docker build . -t tankbohr/andy
