@@ -12,6 +12,9 @@ apps:
 apply:
 	@kubectl apply -f k8s/andy.yml
 
+open-zipkin:
+	open http://localhost:9411/zipkin/
+
 shell: kb-app-shell
 
 remote-console: kb-app-remote_console

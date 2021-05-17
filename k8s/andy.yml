@@ -29,6 +29,8 @@ spec:
               fieldPath: status.podIP
         ports:
         - containerPort: 6379
+      - name: otel-collector
+        image: otel/opentelemetry-collector
 ---
 apiVersion: v1
 kind: Service

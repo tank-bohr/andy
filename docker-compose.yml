@@ -1,0 +1,17 @@
+version: '3'
+services:
+  otel:
+    image: otel/opentelemetry-collector
+    command: ["--config=/conf/otel-collector-config.yaml"]
+    ports:
+      - 55681:55681
+      - 55680:55680
+    volumes:
+      - ./config/otel-collector-config.yaml:/conf/otel-collector-config.yaml
+    environment:
+      - OTEL_RESOURCE_ATTRIBUTES="service.name=andy,service.version=1.1.1"
+
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - 9411:9411

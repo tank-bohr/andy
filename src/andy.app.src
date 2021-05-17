@@ -8,7 +8,10 @@
     stdlib,
     sasl,
     mnesia,
-    redis
+    redis,
+    opentelemetry,
+    opentelemetry_api,
+    opentelemetry_exporter
    ]},
   {env,[]},
   {modules, []},

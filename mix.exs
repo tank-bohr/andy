@@ -25,8 +25,8 @@ defmodule Andy.MixProject do
     [
       {:redis, git: "https://github.com/niamtokik/redis", ref: "2d2790f"},
       {:libcluster, "~> 3.3"}
-      # {:dep_from_hexpm, "~> 0.3.0"},
-      # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
+      {:opentelemetry_api, "~> 0.6"},
+      {:opentelemetry, "~> 0.6"}
     ]
   end
 

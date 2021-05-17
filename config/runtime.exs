@@ -20,3 +20,8 @@ config :libcluster,
         kubernetes_service_name: "andy-service",
         kubernetes_ip_lookup_mode: :pods,
         kubernetes_namespace: "default"]]]
+
+config :opentelemetry, :processors,
+  otel_batch_processor: %{
+    exporter: {:otel_exporter_stdout, []}
+  }
