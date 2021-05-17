@@ -3,6 +3,7 @@
         {logger_level, ${LOG_LEVEL}}
     ]},
     {andy, [
+        {http_port, 8080},
         {db_backend, andy_mnesia_backend}
     ]}
 ].

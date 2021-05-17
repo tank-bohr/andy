@@ -37,7 +37,8 @@ start_link() ->
 
 %% @private
 init({}) ->
-    Port = application:get_env(andy, port, ?DEFAULT_PORT),
+    Port = application:get_env(andy, cli_port, ?DEFAULT_TCP_PORT),
+    ?LOG_ERROR("============listening port [~p]", [Port]),
     {ok, Listen} = gen_tcp:listen(Port, ?OPTIONS),
     State = #state{listen = Listen},
     {ok, State, #continue{payload = accept}}.

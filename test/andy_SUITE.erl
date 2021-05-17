@@ -19,22 +19,26 @@
     end_per_testcase/2
 ]).
 
--define(APPLICATION_ENV(Port, Nodes), [
+-define(APPLICATION_ENV(CliPort, WebPort, HttpMode, Nodes), [
     {kernel, [
         {logger_level, error}
     ]},
     {andy, [
-        {port, Port},
+        {cli_port, CliPort},
+        {web_port, WebPort},
+        {http_mode, HttpMode},
         {db_backend, andy_mnesia_backend},
         {db_nodes, Nodes}
     ]}
 ]).
 
--define(MASTER_PORT, 6379).
--define(MASTER_ENV(Nodes), ?APPLICATION_ENV(?MASTER_PORT, Nodes)).
+-define(MASTER_TCP_PORT, 6379).
+-define(MASTER_HTTP_PORT, 8080).
+-define(MASTER_ENV(Nodes), ?APPLICATION_ENV(?MASTER_TCP_PORT, ?MASTER_HTTP_PORT, master, Nodes)).
 
--define(SLAVE_PORT, 6378).
--define(SLAVE_ENV(Nodes), ?APPLICATION_ENV(?SLAVE_PORT, Nodes)).
+-define(SLAVE_TCP_PORT, 6378).
+-define(SLAVE_HTTP_PORT, 8081).
+-define(SLAVE_ENV(Nodes), ?APPLICATION_ENV(?SLAVE_TCP_PORT, ?SLAVE_HTTP_PORT, slave, Nodes)).
 
 all() ->
     [
@@ -81,11 +85,11 @@ end_per_group(mnesia_backend, Config) ->
 init_per_testcase(_TestCase, Config) ->
     {SocketForPut, SocketForGet} = case ?config(backend, Config) of
         local ->
-            {ok, Socket} = gen_tcp:connect("localhost", ?DEFAULT_PORT, ?OPTIONS),
+            {ok, Socket} = gen_tcp:connect("localhost", ?DEFAULT_TCP_PORT, ?OPTIONS),
             {Socket, Socket};
         mnesia ->
-            {ok, MasterSocket} = gen_tcp:connect("localhost", ?MASTER_PORT, ?OPTIONS),
-            {ok, SlaveSocket} = gen_tcp:connect("localhost", ?SLAVE_PORT, ?OPTIONS),
+            {ok, MasterSocket} = gen_tcp:connect("localhost", ?MASTER_TCP_PORT, ?OPTIONS),
+            {ok, SlaveSocket} = gen_tcp:connect("localhost", ?SLAVE_TCP_PORT, ?OPTIONS),
             {MasterSocket, SlaveSocket}
     end,
     [
@@ -128,6 +132,9 @@ stop_applications(Node) ->
 setup_slave(Node) ->
     Path = lists:filter(fun is_directory/1, code:get_path()),
     true = rpc:call(Node, code, set_path, [Path]),
+    % ok = rpc:call(Node, application, set_logger, {
+    %     logger,[{handler, default, logger_std_h, #{config => #{file => ["~/Hobby/andy/slave.log"]}}}]
+    % }),
     ok.
 
 is_directory(Path) ->

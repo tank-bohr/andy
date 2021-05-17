@@ -4,5 +4,4 @@
 -record(continue, {
     payload
 }).
-
 -endif.

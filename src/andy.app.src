@@ -8,11 +8,11 @@
     stdlib,
     sasl,
     mnesia,
-    redis
+    redis,
+    cowboy
    ]},
   {env,[]},
   {modules, []},
-
   {licenses, ["Apache 2.0"]},
   {links, []}
  ]}.
