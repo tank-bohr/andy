@@ -3,7 +3,7 @@
 NAMESPACE ?= default
 PORT := 6379
 
-pods:
+get-pods:
 	@kubectl get pods -n $(NAMESPACE) -o wide
 
 apps:
@@ -17,6 +17,8 @@ shell: kb-app-shell
 remote-console: kb-app-remote_console
 
 build-and-push: docker-build docker-push
+
+rebuild: kb-cleanse build-and-push apply get-pods
 
 ################################################################################
 
@@ -32,11 +34,17 @@ kb-app-show:
 kb-app-shell:
 	@kubectl exec -it $(APP) -n $(NAMESPACE) -- sh
 
+kb-app-logs:
+	@kubectl logs -f $(APP)
+
 kb-app-remote_console:
 	@kubectl exec -it $(APP) -n $(NAMESPACE) -- ./bin/app remote
 
 kb-app-port-forward:
 	@kubectl port-forward $(APP) $(PORT)
+
+kb-cleanse:
+	@kubectl delete deployments andy-deployment
 
 docker-build:
 	@docker build . -t tankbohr/andy

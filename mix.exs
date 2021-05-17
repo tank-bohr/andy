@@ -23,7 +23,8 @@ defmodule Andy.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:redis, git: "https://github.com/niamtokik/redis", ref: "2d2790f"}
+      {:redis, git: "https://github.com/niamtokik/redis", ref: "2d2790f"},
+      {:libcluster, "~> 3.3"}
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
     ]
