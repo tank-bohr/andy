@@ -1,0 +1,3 @@
+%{
+  "redis": {:git, "https://github.com/niamtokik/redis", "2d2790fe6f63cfe269ffa60c0689ada9bc65a116", [ref: "2d2790f"]},
+}

@@ -21,7 +21,7 @@ spec:
         env:
         - name: "LOG_LEVEL"
           value: "info"
-        - name: "COOKIE"
+        - name: "RELEASE_COOKIE"
           value: "0ec50c3a-eb8b-4d93-a9c5-5cf267724f6f"
         - name: POD_IP
           valueFrom:

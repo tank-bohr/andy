@@ -2,3 +2,5 @@
 .github
 test
 erl_crash.dump
+deps
+_build

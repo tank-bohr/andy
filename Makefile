@@ -33,7 +33,7 @@ kb-app-shell:
 	@kubectl exec -it $(APP) -n $(NAMESPACE) -- sh
 
 kb-app-remote_console:
-	@kubectl exec -it $(APP) -n $(NAMESPACE) -- ./bin/app remote_console
+	@kubectl exec -it $(APP) -n $(NAMESPACE) -- ./bin/app remote
 
 kb-app-port-forward:
 	@kubectl port-forward $(APP) $(PORT)
@@ -43,3 +43,17 @@ docker-build:
 
 docker-push:
 	@docker push tankbohr/andy:latest
+
+docker-run:
+	@docker run --rm \
+		-p 6379:6379 \
+		-e "POD_IP=127.0.0.1" \
+		-e "LOG_LEVEL=debug" \
+		tankbohr/andy
+
+docker-run-shell:
+	@docker run --rm -it \
+		-p 6379:6379 \
+		-e "POD_IP=127.0.0.1" \
+		-e "LOG_LEVEL=debug" \
+		tankbohr/andy ./bin/app start_iex
