@@ -69,4 +69,9 @@ create_table(Nodes) ->
     ]).
 
 db_nodes() ->
-    application:get_env(andy, db_nodes, [node()]).
+    case whereis(andy_cluster_sup) of
+        Pid when is_pid(Pid) ->
+            [node() | nodes()];
+        undefined ->
+            application:get_env(andy, db_nodes, [node()])
+    end.

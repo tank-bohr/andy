@@ -44,6 +44,7 @@ kb-app-port-forward:
 	@kubectl port-forward $(APP) $(PORT)
 
 kb-cleanse:
+	@kubectl delete service andy-service
 	@kubectl delete deployments andy-deployment
 
 docker-build:
