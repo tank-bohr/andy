@@ -24,13 +24,13 @@ config :libcluster,
 config :telemetry_poller, :default,
   name: :andy_telemetry_poller,
   measurements: [
-    :memory
+    :memory,
     :system_counts,
     :total_run_queue_lengths,
     {:process_info, [
-        name:, :andy_connection,
-        event:, [:andy_connection, :worker],
-        keys:, [:memory, :message_queue_len]
+        name: :andy_connection,
+        event: [:andy_connection, :worker],
+        keys: [:memory, :message_queue_len]
     ]},
-    {:andy_connection, :sessions_count, []}
+    { , :sessions_count, []}
   ]

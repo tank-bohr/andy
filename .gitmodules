@@ -1,6 +1,0 @@
-[submodule "k8s-prometheus"]
-	path = k8s-prometheus
-	url = https://github.com/bibinwilson/kubernetes-prometheus
-[submodule "k8s-grafana"]
-	path = k8s-grafana
-	url = https://github.com/bibinwilson/kubernetes-grafana
