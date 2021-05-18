@@ -84,7 +84,7 @@ handle_info(dump, #state{data = Data, dump_interval = DumpInterval, dirty = true
             {noreply, State}
     end;
 handle_info(dump, #state{dump_interval = DumpInterval, dirty = false} = State) ->
-    ?LOG_DEBUG("No changes. Do nothing"),
+    % ?LOG_DEBUG("No changes. Do nothing"),
     {noreply, State#state{timer = start_dump_timer(DumpInterval)}};
 handle_info({'DOWN', Mon, process, Pid, normal}, #state{dumper_pid = Pid, dumper_monitor = Mon} = State) ->
     ?LOG_DEBUG("Dump successfully finished."),

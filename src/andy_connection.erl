@@ -5,7 +5,8 @@
 
 -export([
     child_spec/0,
-    start_link/0
+    start_link/0,
+    sessions_count/0
 ]).
 
 -behaviour(gen_server).
@@ -34,6 +35,9 @@ child_spec() ->
 -spec start_link() -> {ok, pid()}.
 start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, {}, []).
+
+sessions_count() ->
+    length(supervisor:which_children(andy_acceptor_sup)).
 
 %% @private
 init({}) ->

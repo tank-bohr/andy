@@ -47,6 +47,14 @@ kb-cleanse:
 	@kubectl delete service andy-service
 	@kubectl delete deployments andy-deployment
 
+kb-install-monitoring:
+	kubectl apply -f k8s-prometheus/clusterRole.yaml
+	kubectl apply -f k8s-prometheus/config-map.yaml
+	kubectl apply -f k8s-prometheus/prometheus-deployment.yaml
+	kubectl apply -f k8s-grafana/grafana-datasource-config.yaml
+	kubectl apply -f k8s-grafana/deployment.yaml
+	kubectl apply -f k8s-grafana/service.yaml
+
 docker-build:
 	@docker build . -t tankbohr/andy
 
