@@ -2,16 +2,32 @@ version: '3'
 services:
   otel:
     image: otel/opentelemetry-collector
-    command: ["--config=/conf/otel-collector-config.yaml"]
     ports:
       - 55681:55681
       - 55680:55680
+    command:
+      "--config=/conf/otel-collector-config.yml"
     volumes:
-      - ./config/otel-collector-config.yaml:/conf/otel-collector-config.yaml
-    environment:
-      - OTEL_RESOURCE_ATTRIBUTES="service.name=andy,service.version=1.1.1"
+      - ./config/otel-collector-config.yml:/conf/otel-collector-config.yml
 
   zipkin:
     image: openzipkin/zipkin
     ports:
       - 9411:9411
+
+  prometheus:
+    image: bitnami/prometheus
+    ports:
+      - "9090:9090"
+    command:
+      - "--config.file=/conf/prometheus.yml"
+      - "--storage.tsdb.path=/opt/bitnami/prometheus/data"
+      - "--web.console.libraries=/opt/bitnami/prometheus/conf/console_libraries"
+      - "--web.console.templates=/opt/bitnami/prometheus/conf/consoles"
+    volumes:
+      - ./config/prometheus.yml:/conf/prometheus.yml
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"

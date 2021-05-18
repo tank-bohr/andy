@@ -11,6 +11,13 @@ processors:
     send_batch_size: 1024
     timeout: 5s
 exporters:
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+    namespace: andy
+    const_labels:
+      app: andy
+    send_timestamps: true
+    metric_expiration: 180m
   zipkin:
     endpoint: "http://zipkin:9411/api/v2/spans"
 extensions:
@@ -22,3 +29,6 @@ service:
       receivers: [otlp]
       processors: [batch]
       exporters: [zipkin]
+    metrics:
+      receivers: [otlp]
+      exporters: [prometheus]

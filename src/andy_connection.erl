@@ -2,6 +2,7 @@
 -include("andy.hrl").
 -include("andy_connection.hrl").
 -include_lib("kernel/include/logger.hrl").
+-include_lib("opentelemetry_api/include/otel_meter.hrl").
 
 -export([
     child_spec/0,
@@ -18,6 +19,7 @@
 ]).
 
 -define(SERVER, ?MODULE).
+-define(COUNTER, <<"andy_connections.count">>).
 
 -record(state, {
     listen
@@ -37,6 +39,7 @@ start_link() ->
 
 %% @private
 init({}) ->
+    otel_counter:new(?otel_current_meter, ?COUNTER, #{monotonic => true, synchronous => true}),
     Port = application:get_env(andy, port, ?DEFAULT_PORT),
     {ok, Listen} = gen_tcp:listen(Port, ?OPTIONS),
     State = #state{listen = Listen},
@@ -55,7 +58,7 @@ handle_info(_Info, State) ->
 
 handle_continue(accept, #state{listen = Listen} = State) ->
     {ok, Socket} = gen_tcp:accept(Listen),
-    ?LOG_DEBUG("accepted"),
+    ?otel_record(?COUNTER, 1, []),
     {ok, Child} = supervisor:start_child(andy_acceptor_sup, [Socket]),
     ?LOG_DEBUG("acceptor worker started ~p", [Child]),
     {noreply, State, #continue{payload = accept}}.
