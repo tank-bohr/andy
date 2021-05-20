@@ -4,12 +4,15 @@
   {registered, []},
   {mod, {andy_app, []}},
   {applications,
-   [kernel,
+   [
+    kernel,
     stdlib,
     sasl,
     mnesia,
     redis,
-    telemetry_poller
+    telemetry_poller,
+    opentelemetry_api,
+    opentelemetry
    ]},
   {env,[]},
   {modules, []},

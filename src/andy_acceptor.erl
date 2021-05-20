@@ -2,6 +2,7 @@
 -include("andy.hrl").
 -include("andy_acceptor.hrl").
 -include_lib("kernel/include/logger.hrl").
+-include_lib("opentelemetry_api/include/otel_tracer.hrl").
 
 -export([
     child_spec/0,
@@ -55,7 +56,9 @@ handle_continue(recv, #state{socket = Socket} = State) ->
     ?LOG_DEBUG("I'm going to receive some data from socket"),
     case gen_tcp:recv(Socket, 0) of
         {ok, Packet} ->
-            process_packet(Packet, State);
+            ?with_span(<<"process_packet">>, #{}, fun(_Ctx) ->
+                process_packet(Packet, State)
+            end);
         {error, closed} ->
             ?LOG_DEBUG("Socket closed"),
             {stop, normal, State}
@@ -67,7 +70,9 @@ terminate(_Reason, #state{socket = Socket}) ->
 process_packet(Packet, #state{socket = Socket} = State) ->
     try redis:decode(Packet) of
         {ok, [Command | Args]} ->
-            process_command([string:uppercase(Command) | Args], Socket)
+            ?with_span(<<"process_command">>, #{}, fun(_Ctx) ->
+                process_command([string:uppercase(Command) | Args], Socket)
+            end)
     catch
         error:Reason ->
             ?LOG_ERROR("invalid packet caused error: [~p]", [Reason]),
