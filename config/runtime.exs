@@ -20,3 +20,17 @@ config :libcluster,
         kubernetes_service_name: "andy-service",
         kubernetes_ip_lookup_mode: :pods,
         kubernetes_namespace: "default"]]]
+
+config :telemetry_poller, :default,
+  name: :andy_telemetry_poller,
+  measurements: [
+    :memory,
+    :system_counts,
+    :total_run_queue_lengths,
+    {:process_info, [
+        name: :andy_connection,
+        event: [:andy_connection, :worker],
+        keys: [:memory, :message_queue_len]
+    ]},
+    { , :sessions_count, []}
+  ]

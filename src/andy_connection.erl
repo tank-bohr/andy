@@ -5,7 +5,8 @@
 
 -export([
     child_spec/0,
-    start_link/0
+    start_link/0,
+    sessions_count/0
 ]).
 
 -behaviour(gen_server).
@@ -34,6 +35,15 @@ child_spec() ->
 -spec start_link() -> {ok, pid()}.
 start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, {}, []).
+
+sessions_count() ->
+    Count = case whereis(andy_acceptor_sup) of
+        Pid when is_pid(Pid) ->
+            length(supervisor:which_children(Pid));
+        _ ->
+            0
+    end,
+    telemetry:execute([andy, connections], #{count => Count}, #{}).
 
 %% @private
 init({}) ->

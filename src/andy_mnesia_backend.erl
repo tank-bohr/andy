@@ -69,5 +69,5 @@ create_table(Nodes) ->
     ]).
 
 db_nodes() ->
-    Nodes = application:get_env(andy, db_nodes, nodes())
-    [node() | Nodes].
+    Nodes = application:get_env(andy, db_nodes, nodes()),
+    lists:usort([node() | Nodes]).

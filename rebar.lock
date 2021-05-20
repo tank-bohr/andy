@@ -1,4 +1,15 @@
+{"1.2.0",
 [{<<"redis">>,
   {git,"https://github.com/niamtokik/redis",
        {ref,"2d2790fe6f63cfe269ffa60c0689ada9bc65a116"}},
-  0}].
+  0},
+ {<<"telemetry">>,{pkg,<<"telemetry">>,<<"0.4.3">>},1},
+ {<<"telemetry_poller">>,{pkg,<<"telemetry_poller">>,<<"0.5.1">>},0}]}.
+[
+{pkg_hash,[
+ {<<"telemetry">>, <<"A06428A514BDBC63293CD9A6263AAD00DDEB66F608163BDEC7C8995784080818">>},
+ {<<"telemetry_poller">>, <<"21071CC2E536810BAC5628B935521FF3E28F0303E770951158C73EAAA01E962A">>}]},
+{pkg_hash_ext,[
+ {<<"telemetry">>, <<"EB72B8365FFDA5BED68A620D1DA88525E326CB82A75EE61354FC24B844768041">>},
+ {<<"telemetry_poller">>, <<"4CAB72069210BC6E7A080CEC9AFFFAD1B33370149ED5D379B81C7C5F0C663FD4">>}]}
+].

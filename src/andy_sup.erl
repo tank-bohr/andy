@@ -13,6 +13,8 @@
 
 -define(SERVER, ?MODULE).
 -define(LIBCLUSTER_SUP, 'Elixir.Cluster.Supervisor').
+-define(METRICS, 'Elixir.Telemetry.Metrics').
+-define(METRICS_PROMETHEUS, 'Elixir.TelemetryMetricsPrometheus').
 
 -spec start_link() -> {ok, pid()}.
 start_link() ->
@@ -28,7 +30,7 @@ init([]) ->
         andy_connection:child_spec()
     ],
 
-    {ok, {SupFlags, maybe_add_cluster(ChildrenSpecs)}}.
+    {ok, {SupFlags, maybe_add_metrics(maybe_add_cluster(ChildrenSpecs))}}.
 
 maybe_add_cluster(ChildrenSpecs) ->
     case application:get_env(libcluster, topologies) of
@@ -39,3 +41,24 @@ maybe_add_cluster(ChildrenSpecs) ->
         _ ->
             ChildrenSpecs
     end.
+
+maybe_add_metrics(ChildrenSpecs) ->
+    case code:is_loaded(?METRICS_PROMETHEUS) of
+        {file, _} ->
+            InitArgs = [
+                {metrics, metrics()}
+            ],
+            ChildSpec = ?METRICS_PROMETHEUS:child_spec(InitArgs),
+            [ChildSpec | ChildrenSpecs];
+        false ->
+            ChildrenSpecs
+    end.
+
+metrics() ->
+    [
+      ?METRICS:last_value(<<"vm.memory.total">>, [{unit, byte}]),
+      ?METRICS:last_value(<<"vm.total_run_queue_lengths.total">>),
+      ?METRICS:last_value(<<"vm.total_run_queue_lengths.cpu">>),
+      ?METRICS:last_value(<<"vm.total_run_queue_lengths.io">>),
+      ?METRICS:last_value(<<"andy.connections.count">>)
+    ].
