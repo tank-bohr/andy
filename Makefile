@@ -1,7 +1,10 @@
-.PHONY: pods apps shell kb-app-show kb-app-shell remote-console build-and-push
+.PHONY: test pods apps shell kb-app-show kb-app-shell remote-console build-and-push
 
 NAMESPACE ?= default
 PORT := 6379
+
+test:
+	rebar3 ct --sname=test
 
 get-pods:
 	@kubectl get pods -n $(NAMESPACE) -o wide
@@ -66,3 +69,6 @@ docker-run-shell:
 		-e "POD_IP=127.0.0.1" \
 		-e "LOG_LEVEL=debug" \
 		tankbohr/andy ./bin/app start_iex
+
+open-zipkin:
+	open http://localhost:9411/zipkin/

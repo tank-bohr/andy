@@ -1,5 +1,8 @@
 {"1.2.0",
-[{<<"redis">>,
+[{<<"opentelemetry">>,{pkg,<<"opentelemetry">>,<<"0.6.0">>},0},
+ {<<"opentelemetry_api">>,{pkg,<<"opentelemetry_api">>,<<"0.6.0">>},0},
+ {<<"opentelemetry_zipkin">>,{pkg,<<"opentelemetry_zipkin">>,<<"0.4.0">>},0},
+ {<<"redis">>,
   {git,"https://github.com/niamtokik/redis",
        {ref,"2d2790fe6f63cfe269ffa60c0689ada9bc65a116"}},
   0},
@@ -7,9 +10,15 @@
  {<<"telemetry_poller">>,{pkg,<<"telemetry_poller">>,<<"0.5.1">>},0}]}.
 [
 {pkg_hash,[
+ {<<"opentelemetry">>, <<"7E7D5A9A66F047DAD3AE7613FC7CEF25AF3C19692663C2F8C00B015E4845592A">>},
+ {<<"opentelemetry_api">>, <<"749CCBFC68B3C8347E52492503A67F85DA61ED898E42A592E62DB88D3BCEDF19">>},
+ {<<"opentelemetry_zipkin">>, <<"868CE254D03F43D0EBEB1952E80B4B0A6CEF72AE5E85D8C3BFFE3A0CB48516FA">>},
  {<<"telemetry">>, <<"A06428A514BDBC63293CD9A6263AAD00DDEB66F608163BDEC7C8995784080818">>},
  {<<"telemetry_poller">>, <<"21071CC2E536810BAC5628B935521FF3E28F0303E770951158C73EAAA01E962A">>}]},
 {pkg_hash_ext,[
+ {<<"opentelemetry">>, <<"91F486315F7C4183245E1EC146563AE1073EC2044F4D186FABE9CB4841005200">>},
+ {<<"opentelemetry_api">>, <<"01D6A2455B42CF3AA225692210510C39727FF92F9612AEA657D1395B642AD44F">>},
+ {<<"opentelemetry_zipkin">>, <<"6384D3ACA2C39F9C67C9C17C1BAC445F6F693326D3C96CD1443EA43DBDD2DD21">>},
  {<<"telemetry">>, <<"EB72B8365FFDA5BED68A620D1DA88525E326CB82A75EE61354FC24B844768041">>},
  {<<"telemetry_poller">>, <<"4CAB72069210BC6E7A080CEC9AFFFAD1B33370149ED5D379B81C7C5F0C663FD4">>}]}
 ].

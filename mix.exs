@@ -25,8 +25,11 @@ defmodule Andy.MixProject do
     [
       {:redis, git: "https://github.com/niamtokik/redis", ref: "2d2790f"},
       {:libcluster, "~> 3.3"},
+      {:telemetry_metrics_prometheus, "~> 1.0"},
       {:telemetry_poller, "~> 0.5.1"},
-      {:telemetry_metrics_prometheus, "~> 1.0"}
+      {:opentelemetry_api, "~> 0.6"},
+      {:opentelemetry, "~> 0.6"},
+      :opentelemetry_zipkin
     ]
   end
 
