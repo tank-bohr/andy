@@ -2,18 +2,19 @@
 
 NAMESPACE ?= default
 PORT := 6379
+Q := @
 
 test:
-	rebar3 ct --sname=test
+	$(Q) rebar3 ct --sname=test
 
 get-pods:
-	@kubectl get pods -n $(NAMESPACE) -o wide
+	$(Q) kubectl get pods -n $(NAMESPACE) -o wide
 
 apps:
-	@kubectl get pod -n $(NAMESPACE) -l "app=andy" -o name
+	$(Q) kubectl get pod -n $(NAMESPACE) -l "app=andy" -o name
 
 apply:
-	@kubectl apply -f k8s/andy.yml
+	$(Q) kubectl apply -f k8s/andy.yml
 
 shell: kb-app-shell
 
@@ -32,43 +33,43 @@ kb-app-%: APP=$(shell \
 	| awk '{print $$1;}')
 
 kb-app-show:
-	@echo $(APP)
+	$(Q) echo $(APP)
 
 kb-app-shell:
-	@kubectl exec -it $(APP) -n $(NAMESPACE) -- sh
+	$(Q) kubectl exec -it $(APP) -n $(NAMESPACE) -- sh
 
 kb-app-logs:
-	@kubectl logs -f $(APP)
+	$(Q) kubectl logs -f $(APP)
 
 kb-app-remote_console:
-	@kubectl exec -it $(APP) -n $(NAMESPACE) -- ./bin/app remote
+	$(Q) kubectl exec -it $(APP) -n $(NAMESPACE) -- ./bin/app remote
 
 kb-app-port-forward:
-	@kubectl port-forward $(APP) $(PORT)
+	$(Q) kubectl port-forward $(APP) $(PORT)
 
 kb-cleanse:
-	@kubectl delete service andy-service
-	@kubectl delete deployments andy-deployment
+	$(Q) kubectl delete service andy-service
+	$(Q) kubectl delete deployments andy-deployment
 
 docker-build:
-	@docker build . -t tankbohr/andy
+	$(Q) docker build . -t tankbohr/andy
 
 docker-push:
-	@docker push tankbohr/andy:latest
+	$(Q) docker push tankbohr/andy:latest
 
 docker-run:
-	@docker run --rm \
+	$(Q) docker run --rm \
 		-p 6379:6379 \
 		-e "POD_IP=127.0.0.1" \
 		-e "LOG_LEVEL=debug" \
 		tankbohr/andy
 
 docker-run-shell:
-	@docker run --rm -it \
+	$(Q) docker run --rm -it \
 		-p 6379:6379 \
 		-e "POD_IP=127.0.0.1" \
 		-e "LOG_LEVEL=debug" \
 		tankbohr/andy ./bin/app start_iex
 
 open-zipkin:
-	open http://localhost:9411/zipkin/
+	$(Q) open http://localhost:9411/zipkin/
